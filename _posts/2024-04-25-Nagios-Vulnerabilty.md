@@ -1,3 +1,9 @@
+---
+title: "Nagios Exploit leads to PWN"
+date: 2024-04-25
+---
+
+
 ##  Initial Scans
 Ip = `10.10.11.248`
 
