@@ -1,6 +1,5 @@
 ---
-title: Welcome to my blog
+title: Write Ups
 ---
 
-HEllo world
- AGIABNASAKSASK
+
