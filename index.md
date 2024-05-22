@@ -3,4 +3,4 @@ title: Write Ups
 ---
 
 
-Welcom to my Blog, I am obsessed with Security, Distributed Systems and much much more. 
+Welcome to my place on the internet! I am obsessed with Security, Distributed Systems and much much more. 
