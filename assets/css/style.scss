@@ -2,3 +2,40 @@
 ---
 
 @import "{{ site.theme }}";
+
+body {
+    background-color: #121212; /* Dark background color */
+    color: #ffffff; /* Light text color */
+    font-family: Arial, sans-serif; /* Optional: Set a font family */
+}
+
+/* Optional: Style links */
+a {
+    color: #bb86fc; /* Light purple link color */
+}
+
+a:visited {
+    color: #ff79c6; /* Different color for visited links */
+}
+
+a:hover {
+    color: #ffb86c; /* Color for hovered links */
+}
+
+/* Style headers */
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff; /* Light color for headers */
+}
+
+/* Style other elements as needed */
+p, li, blockquote {
+    color: #e0e0e0; /* Slightly lighter text for readability */
+}
+
+/* Optional: Style code blocks */
+pre, code {
+    background-color: #2d2d2d; /* Dark background for code */
+    color: #ffffff; /* Light text for code */
+    padding: 10px;
+    border-radius: 5px;
+}
