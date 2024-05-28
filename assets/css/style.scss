@@ -2,21 +2,10 @@
 ---
 
 @import "{{ site.theme }}";
-
-
-
-
-@import "variables";
 .main-content {
     body {
         background-color: #121212; /* Dark background color */
         color: #ffffff; /* Light text color */
         font-family: Arial, sans-serif; /* Optional: Set a font family */
     }
-}
-
-.page-header {
-  color: $header-heading-color;
-  text-align: center;
-  background-color: $header-bg-color;
 }
