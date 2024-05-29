@@ -128,7 +128,7 @@ curl -XPOST --insecure "https://nagios.monitored.htb/nagiosxi/api/v1/system/user
 
 It asks us to changes password, we do so. And we are in!
 
-![[Assets/Pasted image 20240425172659.png](https://kickeddroid.github.io/Assets/Pasted%20image%2020240425172659.png)]
+![image](https://kickeddroid.github.io/Assets/Pasted%20image%2020240425172659.png)
 
 # Reverse Shell
 using nagios admin priveleges we create a new service and add a custom command.
