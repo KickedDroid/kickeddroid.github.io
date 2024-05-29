@@ -100,7 +100,7 @@ GET /?url=@0:1337/debug/environment
 ```
 
 
-![[Pasted image 20240521230536.png]]
+![[Assets/Pasted image 20240521230536.png]]
 
 ## PS
 Another cool one that worked was 
