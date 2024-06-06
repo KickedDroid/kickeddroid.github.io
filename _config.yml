@@ -1,4 +1,4 @@
-remote_theme: jekyll/hacker
+remote_theme: pages-themes/hacker
 
 plugins:
   # whatever else was already here...
