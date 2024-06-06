@@ -1,4 +1,4 @@
-remote_theme: jekyll/minima
+remote_theme: jekyll/hacker
 
 plugins:
   # whatever else was already here...
