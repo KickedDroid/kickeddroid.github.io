@@ -1,7 +1,1 @@
-remote_theme: jekyll/minima
-plugins:
-  # whatever else was already here...
-  - jekyll-remote-theme
 
-minima:
-  skin: dark 
