@@ -5,7 +5,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cybersecurity Lessons Learned: SSTI, Pickle RCE, and More - Kicked Droid's Pentesting Blog</title>
     <style>
-        /* ... (Include all the styles from the previous blog post template) ... */
+        @keyframes blink {
+            0% { opacity: 0; }
+            49% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes glitch {
+            0% { transform: none; opacity: 1; }
+            
+            10% { transform: none; opacity: 1; }
+            27% { transform: none; opacity: 1; }
+            
+            35% { transform: none; opacity: 1; }
+            52% { transform: none; opacity: 1; }
+           
+            50% { transform: none; opacity: 1; }
+            72% { transform: none; opacity: 1; }
+           
+            80% { transform: none; opacity: 1; }
+            100% { transform: none; opacity: 1; }
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100vh); }
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #0f0;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                transparent 50%,
+                rgba(0, 255, 0, 0.025) 50%
+            );
+            background-size: 100% 4px;
+            z-index: -1;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                rgba(0, 255, 0, 0) 0%,
+                rgba(0, 255, 0, 0.03) 50%,
+                rgba(0, 255, 0, 0) 100%
+            );
+            background-size: 100% 100%;
+            animation: scanline 10s linear infinite;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            border-bottom: 1px solid #0f0;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1, h2 {
+            color: #0f0;
+            animation: glitch 5s infinite;
+        }
+
+        a {
+            color: #0ff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .post {
+            margin-bottom: 30px;
+        }
+
+        .post-date {
+            font-size: 0.8em;
+            color: #0f0;
+        }
+
+        .cursor::after {
+            content: "_";
+            opacity: 1;
+            animation: blink 1s infinite;
+        }
     </style>
 </head>
 <body>
