@@ -8,6 +8,17 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);  // Append the renderer to the DOM
 
+// Set the scene background color
+scene.background = new THREE.Color(0x000033);
+
+// Add lighting
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambientLight);
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(5, 5, 5).normalize();
+scene.add(directionalLight);
+
 // Create a computer monitor
 function createMonitor() {
     const group = new THREE.Group();
@@ -20,14 +31,14 @@ function createMonitor() {
 
     // Monitor frame
     const frameGeometry = new THREE.BoxGeometry(2.1, 1.6, 0.1);
-    const frameMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const frameMaterial = new THREE.MeshBasicMaterial({ color: 0xd3d3d3 });
     const frame = new THREE.Mesh(frameGeometry, frameMaterial);
     frame.position.z = -0.05;
     group.add(frame);
 
     // Monitor stand
     const standGeometry = new THREE.BoxGeometry(0.3, 0.8, 0.3);
-    const standMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const standMaterial = new THREE.MeshBasicMaterial({ color: 0x4f4f4f });
     const stand = new THREE.Mesh(standGeometry, standMaterial);
     stand.position.y = -1.2;
     stand.position.z = 0.1;
@@ -53,7 +64,7 @@ function createScreenContent() {
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    ctx.fillStyle = 'lime';
+    ctx.fillStyle = '#00FF00';
     ctx.font = '10px monospace';
     ctx.fillText('> KICKED DROID', 5, 15);
     ctx.fillText('> INITIALIZING...', 5, 30);
