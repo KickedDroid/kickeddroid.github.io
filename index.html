@@ -115,10 +115,36 @@
             opacity: 1;
             animation: blink 1s infinite;
         }
+        #ascii-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        #ascii-render {
+            font-family: monospace;
+            font-size: 8px;
+            line-height: 8px;
+            white-space: pre;
+            color: #0f0;
+        }
     </style>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
 </head>
 <body>
+
+    <div id="ascii-container">
+        <div id="ascii-render"></div>
+    </div>
     <div class="container">
+        <div class="container">
         <header>
             <h1 class="cursor">Kicked Droid's Pentesting Blog</h1>
             <p>Exploring the depths of cybersecurity one hack at a time.</p>
@@ -142,5 +168,7 @@
              Add more post entries as needed -->
         </main>
     </div>
+    </div>
+    <script src="ascii-animation.js"></script>
 </body>
 </html>
