@@ -13,7 +13,7 @@ const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true 
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 renderer.setClearColor(0x000000, 1);
-const start = Date.now();
+//const start = Date.now();
 camera.position.z = 7;
 
 // Create a hidden canvas for image data extraction
@@ -44,9 +44,9 @@ function convertToAscii(width, height) {
 // Animation loop
 function animate() {
     requestAnimationFrame(animate);
-    const timer = Date.now() - start;
-    cube.rotation.x += timer + 0.01;
-    cube.rotation.y += timer + 0.01;
+    //const timer = Date.now() - start;
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
 
     renderer.render(scene, camera);
 
