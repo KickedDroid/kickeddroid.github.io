@@ -1,5 +1,5 @@
-// ASCII characters for rendering
-const ASCII_CHARS = ['@', '#', 'S', '%', '?', '*', '+', ';', ':', ',', '.'];
+// ASCII characters for rendering (darker to brighter)
+const ASCII_CHARS = ['@', '%', '#', '*', '+', '=', '-', ':', '.', ' '];
 
 // Set up the scene, camera, and renderer
 const scene = new THREE.Scene();
@@ -7,24 +7,84 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 
-// Create a cube and add it to the scene
-const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
+// Create a computer monitor
+function createMonitor() {
+    const group = new THREE.Group();
 
-camera.position.z = 5;
+    // Monitor screen
+    const screenGeometry = new THREE.PlaneGeometry(2, 1.5);
+    const screenMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+    const screen = new THREE.Mesh(screenGeometry, screenMaterial);
+    group.add(screen);
+
+    // Monitor frame
+    const frameGeometry = new THREE.BoxGeometry(2.1, 1.6, 0.1);
+    const frameMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const frame = new THREE.Mesh(frameGeometry, frameMaterial);
+    frame.position.z = -0.05;
+    group.add(frame);
+
+    // Monitor stand
+    const standGeometry = new THREE.BoxGeometry(0.3, 0.8, 0.3);
+    const standMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const stand = new THREE.Mesh(standGeometry, standMaterial);
+    stand.position.y = -1.2;
+    stand.position.z = 0.1;
+    group.add(stand);
+
+    // Add some "screen content"
+    const contentGeometry = new THREE.PlaneGeometry(1.9, 1.4);
+    const contentTexture = new THREE.CanvasTexture(createScreenContent());
+    const contentMaterial = new THREE.MeshBasicMaterial({ map: contentTexture, transparent: true });
+    const content = new THREE.Mesh(contentGeometry, contentMaterial);
+    content.position.z = 0.01;
+    group.add(content);
+
+    return group;
+}
+
+function createScreenContent() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 190;
+    canvas.height = 140;
+    const ctx = canvas.getContext('2d');
+    
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = 'lime';
+    ctx.font = '10px monospace';
+    ctx.fillText('> KICKED DROID', 5, 15);
+    ctx.fillText('> INITIALIZING...', 5, 30);
+    ctx.fillText('> ACCESS GRANTED', 5, 45);
+    
+    return canvas;
+}
+
+const monitor = createMonitor();
+scene.add(monitor);
+
+camera.position.z = 3;
+
+// Create a hidden canvas for image data extraction
+const hiddenCanvas = document.createElement('canvas');
+const hiddenContext = hiddenCanvas.getContext('2d');
 
 // Function to convert render to ASCII
-function convertToAscii(context, width, height) {
-    const imageData = context.getImageData(0, 0, width, height);
+function convertToAscii(width, height) {
+    hiddenCanvas.width = width;
+    hiddenCanvas.height = height;
+    
+    hiddenContext.drawImage(renderer.domElement, 0, 0);
+    const imageData = hiddenContext.getImageData(0, 0, width, height);
     const data = imageData.data;
+    
     let ascii = '';
-    for (let i = 0; i < height; i += 2) {
+    for (let i = 0; i < height; i += 1) {
         for (let j = 0; j < width; j++) {
             const idx = (i * width + j) * 4;
             const brightness = (data[idx] + data[idx + 1] + data[idx + 2]) / 3;
-            const char = ASCII_CHARS[Math.floor(brightness / 25)];
+            const char = ASCII_CHARS[Math.floor((brightness / 255) * (ASCII_CHARS.length - 1))];
             ascii += char || ' ';
         }
         ascii += '\n';
@@ -36,12 +96,13 @@ function convertToAscii(context, width, height) {
 function animate() {
     requestAnimationFrame(animate);
 
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
+    // Subtle monitor movement
+    monitor.rotation.y = Math.sin(Date.now() * 0.001) * 0.05;
+    monitor.rotation.x = Math.cos(Date.now() * 0.001) * 0.025;
 
     renderer.render(scene, camera);
 
-    const ascii = convertToAscii(renderer.domElement.getContext('2d'), window.innerWidth, window.innerHeight);
+    const ascii = convertToAscii(80, 40);  // Adjust these values to change the ASCII resolution
     document.getElementById('ascii-render').textContent = ascii;
 }
 
@@ -52,4 +113,5 @@ window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+// Start the animation
 animate();
