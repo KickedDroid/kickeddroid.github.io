@@ -30,8 +30,8 @@ function convertToAscii(width, height) {
     const data = imageData.data;
 
     let ascii = '';
-    for (let i = 0; i < height; i += 1) {  // Adjust step for better performance and appearance
-        for (let j = 0; j < width; j ++) {  // Adjust step for better performance and appearance
+    for (let i = 0; i < height; i += 4) {  // Adjust step for better performance and appearance
+        for (let j = 0; j < width; j += 4) {  // Adjust step for better performance and appearance
             const idx = (i * width + j) * 4;
             const brightness = (data[idx] + data[idx + 1] + data[idx + 2]) / 3;
             const char = ASCII_CHARS[Math.floor((brightness / 255) * (ASCII_CHARS.length - 1))];
