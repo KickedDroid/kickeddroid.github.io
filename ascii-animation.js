@@ -14,7 +14,7 @@ const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 renderer.setClearColor(0x000000, 1);
 
-camera.position.z = 5;
+camera.position.z = 7;
 
 // Create a hidden canvas for image data extraction
 const hiddenCanvas = document.createElement('canvas');
