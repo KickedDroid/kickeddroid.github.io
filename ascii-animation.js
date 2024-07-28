@@ -71,26 +71,37 @@ camera.position.z = 3;
 const hiddenCanvas = document.createElement('canvas');
 const hiddenContext = hiddenCanvas.getContext('2d');
 
+// Check if the context was successfully created
+if (!hiddenContext) {
+    console.error('Failed to get 2D context for hidden canvas');
+}
+
 // Function to convert render to ASCII
 function convertToAscii(width, height) {
     hiddenCanvas.width = width;
     hiddenCanvas.height = height;
     
-    hiddenContext.drawImage(renderer.domElement, 0, 0);
-    const imageData = hiddenContext.getImageData(0, 0, width, height);
-    const data = imageData.data;
-    
-    let ascii = '';
-    for (let i = 0; i < height; i += 1) {
-        for (let j = 0; j < width; j++) {
-            const idx = (i * width + j) * 4;
-            const brightness = (data[idx] + data[idx + 1] + data[idx + 2]) / 3;
-            const char = ASCII_CHARS[Math.floor((brightness / 255) * (ASCII_CHARS.length - 1))];
-            ascii += char || ' ';
+    // Check if the renderer is properly rendered before drawing
+    if (renderer.domElement) {
+        hiddenContext.drawImage(renderer.domElement, 0, 0);
+        const imageData = hiddenContext.getImageData(0, 0, width, height);
+        const data = imageData.data;
+
+        let ascii = '';
+        for (let i = 0; i < height; i += 1) {
+            for (let j = 0; j < width; j++) {
+                const idx = (i * width + j) * 4;
+                const brightness = (data[idx] + data[idx + 1] + data[idx + 2]) / 3;
+                const char = ASCII_CHARS[Math.floor((brightness / 255) * (ASCII_CHARS.length - 1))];
+                ascii += char || ' ';
+            }
+            ascii += '\n';
         }
-        ascii += '\n';
+        return ascii;
+    } else {
+        console.error('Renderer DOM element is not ready');
+        return '';
     }
-    return ascii;
 }
 
 // Animation loop
