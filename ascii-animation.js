@@ -30,7 +30,7 @@ camera.position.z = 30;
 
 // Create a hidden canvas for image data extraction
 const hiddenCanvas = document.createElement('canvas');
-const hiddenContext = hiddenCanvas.getContext('2d');
+const hiddenContext = hiddenCanvas.getContext('2d', {willReadFrequently: true});
 
 // Function to convert render to ASCII
 function convertToAscii(width, height) {
@@ -38,7 +38,7 @@ function convertToAscii(width, height) {
     hiddenCanvas.height = height;
     
     hiddenContext.drawImage(renderer.domElement, 0, 0);
-    const imageData = hiddenContext.getImageData(0, 0, width, height);
+    const imageData = hiddenContext.getImageData(0, 0, width, height, true);
     const data = imageData.data;
     
     let ascii = '';
