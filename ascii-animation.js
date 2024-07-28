@@ -23,24 +23,23 @@ const hiddenContext = hiddenCanvas.getContext('2d', {willReadFrequently: true});
 function convertToAscii(width, height) {
     hiddenCanvas.width = width;
     hiddenCanvas.height = height;
-    
+
     hiddenContext.drawImage(renderer.domElement, 0, 0);
     const imageData = hiddenContext.getImageData(0, 0, width, height);
     const data = imageData.data;
-    
+
     let ascii = '';
-    for (let i = 0; i < height; i += 2) {
+    for (let i = 0; i < height; i += 1) {
         for (let j = 0; j < width; j++) {
             const idx = (i * width + j) * 4;
             const brightness = (data[idx] + data[idx + 1] + data[idx + 2]) / 3;
-            const char = ASCII_CHARS[Math.floor(brightness / 25)] || ' ';
-            ascii += char;
+            const char = ASCII_CHARS[Math.floor((brightness / 255) * (ASCII_CHARS.length - 1))];
+            ascii += char || ' ';
         }
         ascii += '\n';
     }
     return ascii;
 }
-
 // Animation loop
 function animate() {
     requestAnimationFrame(animate);
