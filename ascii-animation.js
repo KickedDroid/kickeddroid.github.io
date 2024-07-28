@@ -12,28 +12,28 @@ function createMonitor() {
     const group = new THREE.Group();
 
     // Monitor screen
-    const screenGeometry = new THREE.PlaneGeometry(4, 3);
+    const screenGeometry = new THREE.PlaneGeometry(2, 1.5);
     const screenMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
     const screen = new THREE.Mesh(screenGeometry, screenMaterial);
     group.add(screen);
 
     // Monitor frame
-    const frameGeometry = new THREE.BoxGeometry(4.2, 3.2, 0.2);
+    const frameGeometry = new THREE.BoxGeometry(2.1, 1.6, 0.1);
     const frameMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
     const frame = new THREE.Mesh(frameGeometry, frameMaterial);
-    frame.position.z = -0.1;
+    frame.position.z = -0.05;
     group.add(frame);
 
     // Monitor stand
-    const standGeometry = new THREE.BoxGeometry(0.5, 1.5, 0.5);
+    const standGeometry = new THREE.BoxGeometry(0.3, 0.8, 0.3);
     const standMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
     const stand = new THREE.Mesh(standGeometry, standMaterial);
-    stand.position.y = -2.35;
-    stand.position.z = 0.15;
+    stand.position.y = -1.2;
+    stand.position.z = 0.1;
     group.add(stand);
 
     // Add some "screen content"
-    const contentGeometry = new THREE.PlaneGeometry(3.8, 2.8);
+    const contentGeometry = new THREE.PlaneGeometry(1.9, 1.4);
     const contentTexture = new THREE.CanvasTexture(createScreenContent());
     const contentMaterial = new THREE.MeshBasicMaterial({ map: contentTexture, transparent: true });
     const content = new THREE.Mesh(contentGeometry, contentMaterial);
@@ -45,20 +45,18 @@ function createMonitor() {
 
 function createScreenContent() {
     const canvas = document.createElement('canvas');
-    canvas.width = 380;
-    canvas.height = 280;
+    canvas.width = 190;
+    canvas.height = 140;
     const ctx = canvas.getContext('2d');
     
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     ctx.fillStyle = 'lime';
-    ctx.font = '20px monospace';
-    ctx.fillText('> KICKED DROID SYSTEMS', 10, 30);
-    ctx.fillText('> INITIALIZING...', 10, 60);
-    ctx.fillText('> ACCESS GRANTED', 10, 90);
-    
-    // Add more text or shapes here to simulate screen content
+    ctx.font = '10px monospace';
+    ctx.fillText('> KICKED DROID', 5, 15);
+    ctx.fillText('> INITIALIZING...', 5, 30);
+    ctx.fillText('> ACCESS GRANTED', 5, 45);
     
     return canvas;
 }
@@ -66,7 +64,7 @@ function createScreenContent() {
 const monitor = createMonitor();
 scene.add(monitor);
 
-camera.position.z = 5;
+camera.position.z = 3;
 
 // Create a hidden canvas for image data extraction
 const hiddenCanvas = document.createElement('canvas');
@@ -82,7 +80,7 @@ function convertToAscii(width, height) {
     const data = imageData.data;
     
     let ascii = '';
-    for (let i = 0; i < height; i += 2) {
+    for (let i = 0; i < height; i += 1) {
         for (let j = 0; j < width; j++) {
             const idx = (i * width + j) * 4;
             const brightness = (data[idx] + data[idx + 1] + data[idx + 2]) / 3;
@@ -99,12 +97,12 @@ function animate() {
     requestAnimationFrame(animate);
 
     // Subtle monitor movement
-    monitor.rotation.y = Math.sin(Date.now() * 0.001) * 0.1;
-    monitor.rotation.x = Math.cos(Date.now() * 0.001) * 0.05;
+    monitor.rotation.y = Math.sin(Date.now() * 0.001) * 0.05;
+    monitor.rotation.x = Math.cos(Date.now() * 0.001) * 0.025;
 
     renderer.render(scene, camera);
 
-    const ascii = convertToAscii(160, 90);  // Adjust these values to change the ASCII resolution
+    const ascii = convertToAscii(80, 40);  // Adjust these values to change the ASCII resolution
     document.getElementById('ascii-render').textContent = ascii;
 }
 
