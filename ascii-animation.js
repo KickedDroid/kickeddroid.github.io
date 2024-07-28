@@ -45,8 +45,8 @@ function convertToAscii(width, height) {
 function animate() {
     requestAnimationFrame(animate);
     const timer = Date.now() - start;
-    cube.rotation.x += timer * 0.01;
-    cube.rotation.y += timer * 0.01;
+    cube.rotation.x += timer + 0.01;
+    cube.rotation.y += timer + 0.01;
 
     renderer.render(scene, camera);
 
