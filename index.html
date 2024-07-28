@@ -5,80 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kicked Droid's Pentesting Blog</title>
     <style>
-        @keyframes blink {
-            0% { opacity: 0; }
-            49% { opacity: 0; }
-            50% { opacity: 1; }
-        }
-
-        @keyframes glitch {
-            0% { transform: none; opacity: 1; }
-            
-            10% { transform: none; opacity: 1; }
-            27% { transform: none; opacity: 1; }
-            
-            35% { transform: none; opacity: 1; }
-            52% { transform: none; opacity: 1; }
-           
-            50% { transform: none; opacity: 1; }
-            72% { transform: none; opacity: 1; }
-           
-            80% { transform: none; opacity: 1; }
-            100% { transform: none; opacity: 1; }
-        }
-
-        @keyframes scanline {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(100vh); }
-        }
-
-        body {
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
             font-family: 'Courier New', monospace;
             background-color: #000;
             color: #0f0;
             line-height: 1.6;
-            margin: 0;
-            padding: 20px;
+            overflow: hidden;
+        }
+
+        #ascii-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: -1;
+            overflow: hidden;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        #ascii-render {
+            font-family: monospace;
+            font-size: 8px;
+            line-height: 6px;
+            white-space: pre;
+            color: #fff;
+            background-color: #000;
+            transform: scale(1.5);  /* Adjust this value to change the size of the ASCII art */
+        }
+
+        .content-container {
             position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                transparent 50%,
-                rgba(0, 255, 0, 0.025) 50%
-            );
-            background-size: 100% 4px;
-            z-index: -1;
-        }
-
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                rgba(0, 255, 0, 0) 0%,
-                rgba(0, 255, 0, 0.03) 50%,
-                rgba(0, 255, 0, 0) 100%
-            );
-            background-size: 100% 100%;
-            animation: scanline 10s linear infinite;
-            z-index: -1;
-        }
-
-        .container {
+            z-index: 1;
             max-width: 800px;
             margin: 0 auto;
+            padding: 20px;
+            overflow-y: auto;
+            height: 100%;
+            box-sizing: border-box;
         }
 
         header {
@@ -89,7 +60,6 @@
 
         h1, h2 {
             color: #0f0;
-            animation: glitch 5s infinite;
         }
 
         a {
@@ -115,25 +85,29 @@
             opacity: 1;
             animation: blink 1s infinite;
         }
-        #ascii-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-            opacity: 0.15;
-            pointer-events: none;
+
+        @keyframes blink {
+            0% { opacity: 0; }
+            49% { opacity: 0; }
+            50% { opacity: 1; }
         }
 
-        #ascii-render {
-            font-family: monospace;
-            font-size: 8px;
-            line-height: 6px;
-            white-space: pre;
-            color: #fff;
-            background-color: #000;
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            font-size: 24px;
+            color: #0f0;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            color: #0ff;
+            transform: scale(1.2);
         }
     </style>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
