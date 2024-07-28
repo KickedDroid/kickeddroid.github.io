@@ -1,4 +1,4 @@
-// ASCII characters for rendering (darker to brighter)
+// ASCII characters for rendering
 const ASCII_CHARS = ['@', '#', 'S', '%', '?', '*', '+', ';', ':', ',', '.'];
 
 // Set up the scene, camera, and renderer
@@ -7,26 +7,13 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 
-// Create a larger, more complex shape
-const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+// Create a cube and add it to the scene
+const geometry = new THREE.BoxGeometry();
 const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-const torusKnot = new THREE.Mesh(geometry, material);
-scene.add(torusKnot);
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
 
-// Add some rotating cubes around the torus knot
-for (let i = 0; i < 5; i++) {
-    const cubeGeometry = new THREE.BoxGeometry(2, 2, 2);
-    const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffff, wireframe: true });
-    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    cube.position.set(
-        Math.cos(i / 5 * Math.PI * 2) * 15,
-        Math.sin(i / 5 * Math.PI * 2) * 15,
-        0
-    );
-    scene.add(cube);
-}
-
-camera.position.z = 30;
+camera.position.z = 5;
 
 // Create a hidden canvas for image data extraction
 const hiddenCanvas = document.createElement('canvas');
@@ -38,7 +25,7 @@ function convertToAscii(width, height) {
     hiddenCanvas.height = height;
     
     hiddenContext.drawImage(renderer.domElement, 0, 0);
-    const imageData = hiddenContext.getImageData(0, 0, width, height, true);
+    const imageData = hiddenContext.getImageData(0, 0, width, height);
     const data = imageData.data;
     
     let ascii = '';
@@ -46,8 +33,8 @@ function convertToAscii(width, height) {
         for (let j = 0; j < width; j++) {
             const idx = (i * width + j) * 4;
             const brightness = (data[idx] + data[idx + 1] + data[idx + 2]) / 3;
-            const char = ASCII_CHARS[Math.floor((brightness / 255) * (ASCII_CHARS.length - 1))];
-            ascii += char || ' ';
+            const char = ASCII_CHARS[Math.floor(brightness / 25)] || ' ';
+            ascii += char;
         }
         ascii += '\n';
     }
@@ -58,17 +45,8 @@ function convertToAscii(width, height) {
 function animate() {
     requestAnimationFrame(animate);
 
-    torusKnot.rotation.x += 0.01;
-    torusKnot.rotation.y += 0.01;
-
-    scene.children.forEach((child, index) => {
-        if (child !== torusKnot) {
-            child.rotation.x += 0.02;
-            child.rotation.y += 0.02;
-            child.position.x = Math.cos((Date.now() / 1000 + index) * Math.PI * 2 / 5) * 15;
-            child.position.y = Math.sin((Date.now() / 1000 + index) * Math.PI * 2 / 5) * 15;
-        }
-    });
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
 
     renderer.render(scene, camera);
 
