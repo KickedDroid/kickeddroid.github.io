@@ -1,5 +1,5 @@
 // ASCII characters for rendering (darker to brighter)
-const ASCII_CHARS = ['@', '#', 'S', '%', '?', '*', '+', ';', ':', ',', '.'];
+const ASCII_CHARS = ['@', '%', '#', '*', '+', '=', '-', ':', '.', ' '];
 
 // Set up the scene, camera, and renderer
 const scene = new THREE.Scene();
@@ -7,26 +7,38 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 
-// Create a larger, more complex shape
-const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-const torusKnot = new THREE.Mesh(geometry, material);
-scene.add(torusKnot);
+// Create a computer monitor
+function createMonitor() {
+    const group = new THREE.Group();
 
-// Add some rotating cubes around the torus knot
-for (let i = 0; i < 5; i++) {
-    const cubeGeometry = new THREE.BoxGeometry(2, 2, 2);
-    const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ffff, wireframe: true });
-    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-    cube.position.set(
-        Math.cos(i / 5 * Math.PI * 2) * 15,
-        Math.sin(i / 5 * Math.PI * 2) * 15,
-        0
-    );
-    scene.add(cube);
+    // Monitor screen
+    const screenGeometry = new THREE.BoxGeometry(4, 3, 0.1);
+    const screenMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const screen = new THREE.Mesh(screenGeometry, screenMaterial);
+    group.add(screen);
+
+    // Monitor frame
+    const frameGeometry = new THREE.BoxGeometry(4.2, 3.2, 0.2);
+    const frameMaterial = new THREE.MeshBasicMaterial({ color: 0x333333 });
+    const frame = new THREE.Mesh(frameGeometry, frameMaterial);
+    frame.position.z = -0.05;
+    group.add(frame);
+
+    // Monitor stand
+    const standGeometry = new THREE.BoxGeometry(0.5, 1.5, 0.5);
+    const standMaterial = new THREE.MeshBasicMaterial({ color: 0x333333 });
+    const stand = new THREE.Mesh(standGeometry, standMaterial);
+    stand.position.y = -2.35;
+    stand.position.z = 0.15;
+    group.add(stand);
+
+    return group;
 }
 
-camera.position.z = 30;
+const monitor = createMonitor();
+scene.add(monitor);
+
+camera.position.z = 5;
 
 // Create a hidden canvas for image data extraction
 const hiddenCanvas = document.createElement('canvas');
@@ -58,17 +70,9 @@ function convertToAscii(width, height) {
 function animate() {
     requestAnimationFrame(animate);
 
-    torusKnot.rotation.x += 0.01;
-    torusKnot.rotation.y += 0.01;
-
-    scene.children.forEach((child, index) => {
-        if (child !== torusKnot) {
-            child.rotation.x += 0.02;
-            child.rotation.y += 0.02;
-            child.position.x = Math.cos((Date.now() / 1000 + index) * Math.PI * 2 / 5) * 15;
-            child.position.y = Math.sin((Date.now() / 1000 + index) * Math.PI * 2 / 5) * 15;
-        }
-    });
+    // Subtle monitor movement
+    monitor.rotation.y = Math.sin(Date.now() * 0.001) * 0.1;
+    monitor.rotation.x = Math.cos(Date.now() * 0.001) * 0.05;
 
     renderer.render(scene, camera);
 
