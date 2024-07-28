@@ -14,7 +14,7 @@ const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 renderer.setClearColor(0x000000, 1);
 
-camera.position.z = 7;
+camera.position.z = 5;
 
 // Create a hidden canvas for image data extraction
 const hiddenCanvas = document.createElement('canvas');
@@ -30,8 +30,8 @@ function convertToAscii(width, height) {
     const data = imageData.data;
 
     let ascii = '';
-    for (let i = 0; i < height; i += 6) {  // Adjust step for better performance and appearance
-        for (let j = 0; j < width; j += 6) {  // Adjust step for better performance and appearance
+    for (let i = 0; i < height; i += 2) {  // Adjust step for better performance and appearance
+        for (let j = 0; j < width; j += 2) {  // Adjust step for better performance and appearance
             const idx = (i * width + j) * 4;
             const brightness = (data[idx] + data[idx + 1] + data[idx + 2]) / 3;
             const char = ASCII_CHARS[Math.floor((brightness / 255) * (ASCII_CHARS.length - 1))];
