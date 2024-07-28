@@ -12,6 +12,7 @@ const geometry = new THREE.BoxGeometry();
 const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
+renderer.setClearColor(0x000000, 1);
 
 camera.position.z = 5;
 
