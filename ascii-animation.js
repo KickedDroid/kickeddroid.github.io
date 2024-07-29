@@ -22,8 +22,8 @@ const hiddenContext = hiddenCanvas.getContext('2d', {willReadFrequently: true});
 
 // Function to convert render to ASCII
 function convertToAscii(width, height) {
-    hiddenCanvas.width = width;
-    hiddenCanvas.height = height;
+    hiddenCanvas.width = width / 2;
+    hiddenCanvas.height = height / 2 ;
 
     hiddenContext.drawImage(renderer.domElement, 0, 0);
     const imageData = hiddenContext.getImageData(0, 0, width, height);
