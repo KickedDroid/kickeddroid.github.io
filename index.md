@@ -1,5 +1,5 @@
 ---
-title: Digital Lair
+title: Lobby
 ---
 
 # Welcome to My Digital Lair!
