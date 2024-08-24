@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "From SQLi to Root"
 date: 2023-10-15
 ---
