@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Season 5 Summary"
 date: 2024-08-21
 ---
