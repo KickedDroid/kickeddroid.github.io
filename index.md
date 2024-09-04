@@ -8,4 +8,4 @@ I'm passionate about security, distributed systems, and a whole lot more. Explor
 
 ## Art 
 
-![Alien]https://kickeddroid.github.io/Assets/alien.png](https://kickeddroid.github.io/Assets/alien.png)
+![alien.png](https://kickeddroid.github.io/Assets/alien.png)
