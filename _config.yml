@@ -1,2 +1,5 @@
 title: Kicked Droid
 theme: minima
+
+minima:
+  skin: dark
