@@ -9,3 +9,7 @@ I'm passionate about security, distributed systems, and a whole lot more. Explor
 ## Art 
 
 ![alien.png](https://kickeddroid.github.io/Assets/alien.png)
+
+![bsodgod](https://kickeddroid.github.io/Assets/BSODGODD.png)
+
+![greenwall](https://kickeddroid.github.io/Assets/green-tv.png)
