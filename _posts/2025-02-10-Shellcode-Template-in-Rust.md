@@ -155,6 +155,7 @@ impl Drop for SecureMemory {
 }
 ```
 
+A very simple main fn for the loader
 
 ```rust
 use std::thread;
@@ -219,4 +220,4 @@ Since our shellcode just returns 0 this working POC proves our template is ready
 
 
 ## Expanding the Template
-
+To be continued
