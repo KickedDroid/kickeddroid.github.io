@@ -110,7 +110,6 @@ Let's take what we know about the unsafe keyword and use it for a loader for our
  
 ```rust
 let start_fn: unsafe extern "C" fn() -> u32 = mem::transmute(secure_mem.as_mut_ptr());
-let _ = start_fn();
 ```
 
 
@@ -198,7 +197,6 @@ fn main() {
                 println!("Executing shellcode...");
                 let start_fn: unsafe extern "C" fn() -> u32 =
                     mem::transmute(secure_mem.as_mut_ptr());
-                //start_fn();
                 let exit = start_fn();
                 println!("Exit: {exit}");
             };
