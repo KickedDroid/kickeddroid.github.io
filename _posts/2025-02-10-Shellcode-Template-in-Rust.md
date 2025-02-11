@@ -157,8 +157,13 @@ impl Drop for SecureMemory {
 
 
 ```rust
+use std::thread;
+use windows::Win32::System::Memory::{
+    VirtualAlloc, VirtualFree, VirtualProtect, MEM_COMMIT, MEM_RELEASE, MEM_RESERVE,
+    PAGE_EXECUTE_READWRITE, PAGE_READWRITE,
+};
 
-fn main() {
+fn main() -> anyhow::Result<()> {
   // Handle shellcode
   let handle = thread::spawn(move || {
             unsafe {
