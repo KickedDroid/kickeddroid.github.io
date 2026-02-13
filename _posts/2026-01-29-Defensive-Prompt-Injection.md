@@ -3,6 +3,9 @@ title: "Defensive Prompt Injection"
 date: 2026-01-28
 ---
 
+
+# Under Heavy Construction / Research Ongoing
+
 ### Triggering Hallucinations
 
 The classic indentation trick. The goal is to get the security agent to ingest the string containing 
