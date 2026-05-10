@@ -52,7 +52,7 @@ What is the KRBTGT NT Hash?
 - Able to brute force *bbrown*'s password
 - ASREP Roast to get *jtrueblood*'s hash
 - Cracked due to weak password
-- Targeted Kerberoast (Not needed for attack chain)
+- Kerberoasting (Not needed for attack chain)
 - ADCS ESC8 Exploit to acquire certificate for `DC01`
 - Dump credentials. 
 
@@ -109,7 +109,7 @@ The `Guest` account is disabled as well.
 [-] shadow.gate\Guest: STATUS_ACCOUNT_DISABLED
 ```
 
-Trying to `--rid-brute` to get a user list gives us
+Trying to `--rid-brute`, `--get-users` and `--users`to get a user list gives us
 
 ```
 [-] Error creating DCERPC connection: SMB SessionError: code: 0xc0000022 - STATUS_ACCESS_DENIED - {Access Denied} A process has requested access to an object but has not been granted those access rights.
@@ -194,7 +194,7 @@ netexec ldap 10.1.169.53 -u jtrueblood -p 'blood_brothers'
 [+] shadow.gate\jtrueblood:blood_brothers
 ```
 
-### Targeted Kerberoasting
+### Kerberoasting
 
 Using the valid credential pair and users file we could also kerberoast the *krb5tgt* account.
 
