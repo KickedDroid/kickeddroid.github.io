@@ -109,7 +109,7 @@ The `Guest` account is disabled as well.
 [-] shadow.gate\Guest: STATUS_ACCOUNT_DISABLED
 ```
 
-Trying to `--rid-brute`, `--get-users` and `--users`to get a user list gives us
+Trying to `--rid-brute` and `--users`to get a user list gives us
 
 ```
 [-] Error creating DCERPC connection: SMB SessionError: code: 0xc0000022 - STATUS_ACCESS_DENIED - {Access Denied} A process has requested access to an object but has not been granted those access rights.
